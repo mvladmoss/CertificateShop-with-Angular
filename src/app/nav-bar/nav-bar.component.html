@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-md navbar-color navbar-dark">
+  <div class="container">
+    <a class="navbar-brand" href="" style="margin-left: -250px;">
+      <i class="fa fa-shopping-bag fa-fw"></i>
+      <b>Магазин Сертификатов
+        <br> </b>
+    </a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbar2SupportedContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse text-center justify-content-end" id="navbar2SupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link text-white" href="">
+            <i class="fa  fa-certificate fa-fw" ></i>CERTIFICATES</a>
+        </li>
+        <li class="nav-item" *ngIf='!isAuthorized'>
+          <a class="nav-link text-white" href="">
+            <i class="fa  fa-gift fa-fw"></i>MY_CERTIFICATES</a>
+        </li>
+        <li class="nav-item" *ngIf='!isAuthorized'>
+          <a class="nav-link text-white" href="">
+            <i class="fa fa-cart-plus fa-fw"></i>CREATE_CERTIFICATE</a>
+        </li>
+      </ul>
+      <div style=" margin-right: -200px;">
+        <div class="btn-group language-select">
+          <select class="btn primary dropdown-toggle">
+            <option>Ru</option>
+            <option>En</option>
+          </select>
+        </div>
+        <a class="btn navbar-btn ml-2 button-background btn-secondary" routerLinkActive="active"  [routerLink]="['/login']">SIGN IN</a>
+
+        <a class="btn navbar-btn ml-2 button-background btn-secondary">
+          <i class="fa d-inline fa-lg fa-user-circle-o"></i>LOG_OUT</a>
+      </div>
+    </div>
+  </div>
+</nav>

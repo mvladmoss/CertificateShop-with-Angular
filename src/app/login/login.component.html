@@ -1,0 +1,23 @@
+<div class="container login-form">
+ <div class="row">
+
+ <div class="col-md-offset-3 form-wrapper col-md-6">
+ <form class="form-horizontal" style="height: 350px;">
+ <span class="heading">АВТОРИЗАЦИЯ</span>
+ <div class="form-group">
+ <input type="email" class="form-control" id="inputEmail" placeholder="Login"  [(ngModel)]="login" name="login">
+ <i class="fa fa-user"></i>
+ </div>
+ <div class="form-group help">
+ <input type="password" class="form-control" id="inputPassword" placeholder="Password"  [(ngModel)]="password" name="password">
+ <i class="fa fa-lock"></i>
+ </div>
+ <div class="form-group">
+ 
+ <button type="submit" class="btn btn-default" (click)="signIn()">ВХОД</button>
+ </div>
+ </form>
+ </div>
+
+ </div><!-- /.row -->
+</div><!-- /.container -->

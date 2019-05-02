@@ -1,0 +1,18 @@
+.navbar-color{
+    background-color: #008B8B;
+    opacity: 0.9;
+}
+
+.text-color{
+    color:azure;
+}
+
+.language-select{
+    background: white;
+    border-radius: 5px;
+}
+
+.button-background{
+    background: #AFEEEE;
+    border: 2px solid white;
+}
