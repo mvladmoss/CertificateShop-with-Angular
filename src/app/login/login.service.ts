@@ -1,34 +1,38 @@
 import { Injectable } from '@angular/core';
-import { HttpClientModule, HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { RestService } from '../rest/rest.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LoginService {
 
-    uri = 'http://localhost:8083/oauth/token';
-    token: string;
+    isUserAuthorized: boolean = false;
 
-    constructor(private http: HttpClient, private router: Router) { }
+    public setUserAuthorized(flag: boolean) {
+        this.isUserAuthorized = flag;
+    };
+
+    constructor(private router: Router, private restService: RestService) { }
 
     login(login: string, password: string) {
-        const myheader = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-        let body = new HttpParams();
-        body = body.set('username', login); //chain
-        body = body.set('password', password);
-        body = body.set('grant_type', "password");
-        body = body.set('client_id', "client");
-        body = body.set('client_secret', "secret");
-        this.http
-            .post(this.uri, body, {
-                headers: myheader
-            })
-            .subscribe((resp: any) => {
-                localStorage.setItem('auth_token', resp.access_token);
-                localStorage.setItem('refresh_token', resp.access_token);
+        this.restService.login(login, password)
+            .then((resp: any) => {
+                this.isUserAuthorized = true;
+                sessionStorage.setItem('auth_token', resp.access_token);
+                sessionStorage.setItem('refresh_token', resp.access_token);
                 this.router.navigate(['welcome']);
             }
-            );
+            ).catch(error => {
+                alert("error");
+                throw error;
+            }).then(() => { alert("after") });
+    }
+
+    logout() {
+        this.isUserAuthorized = false;
+        sessionStorage.removeItem('auth_token');
+        sessionStorage.removeItem('refresh_token');
+        this.router.navigate(['welcome']);
     }
 }

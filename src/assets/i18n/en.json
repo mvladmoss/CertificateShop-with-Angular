@@ -1,0 +1,11 @@
+{
+    "certificate": {
+        "shop" : "Certificate Shop",
+        "certificates" : "CERTIFICATES",
+        "my_certificates" : "MY CERTFICATES"
+    },
+
+    "signIn" : "SIGN IN",
+    "signUp" : "SIGN UP",
+    "logout" : "LOG OUT" 
+}

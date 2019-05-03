@@ -11,12 +11,12 @@ export class LoginComponent implements OnInit {
   login: string;
   password: string;
 
+
   constructor(private loginService: LoginService) {
      
   }
 
   signIn() {
-  console.log("you are logging in")
   this.loginService.login(this.login, this.password);
   }
  

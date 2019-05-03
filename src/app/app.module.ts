@@ -8,6 +8,13 @@ import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { HttpClientModule } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { HttpClient} from "@angular/common/http";
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -25,9 +32,18 @@ import { HttpClientModule } from '@angular/common/http';
       { path: '', redirectTo: 'welcome', pathMatch: 'full' },
       { path: 'login', component: LoginComponent }
     ]),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
     FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+

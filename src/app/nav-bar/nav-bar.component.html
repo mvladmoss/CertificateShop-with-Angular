@@ -2,7 +2,7 @@
   <div class="container">
     <a class="navbar-brand" href="" style="margin-left: -250px;">
       <i class="fa fa-shopping-bag fa-fw"></i>
-      <b>Магазин Сертификатов
+      <b>{{ 'certificate.shop' | translate }}
         <br> </b>
     </a>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
@@ -13,28 +13,32 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <a class="nav-link text-white" href="">
-            <i class="fa  fa-certificate fa-fw" ></i>CERTIFICATES</a>
+            <i class="fa  fa-certificate fa-fw"></i>{{ 'certificate.certificates' | translate }}</a>
         </li>
-        <li class="nav-item" *ngIf='!isAuthorized'>
+        <li class="nav-item" *ngIf='isAuthorized'>
           <a class="nav-link text-white" href="">
-            <i class="fa  fa-gift fa-fw"></i>MY_CERTIFICATES</a>
-        </li>
-        <li class="nav-item" *ngIf='!isAuthorized'>
-          <a class="nav-link text-white" href="">
-            <i class="fa fa-cart-plus fa-fw"></i>CREATE_CERTIFICATE</a>
+            <i class="fa  fa-gift fa-fw"></i>{{ 'certificate.my_certificates' | translate }}</a>
         </li>
       </ul>
       <div style=" margin-right: -200px;">
         <div class="btn-group language-select">
-          <select class="btn primary dropdown-toggle">
-            <option>Ru</option>
-            <option>En</option>
+          <select class="btn primary dropdown-toggle" [(ngModel)]="selectedLanguage">
+            <option value="ru">RU</option>
+            <option value="en">EN</option>
           </select>
         </div>
-        <a class="btn navbar-btn ml-2 button-background btn-secondary" routerLinkActive="active"  [routerLink]="['/login']">SIGN IN</a>
-
-        <a class="btn navbar-btn ml-2 button-background btn-secondary">
-          <i class="fa d-inline fa-lg fa-user-circle-o"></i>LOG_OUT</a>
+        <a class="btn btn-dark ml-2 " routerLinkActive="active" [routerLink]="['/login']"
+          *ngIf='!isAuthorized'>
+          {{ 'signIn' | translate }}
+        </a>
+        <a class="btn btn-dark ml-2 " (click)='loginService.logout()' [routerLink]="['/welcome']"
+          *ngIf='isAuthorized'>
+          {{ 'logout' | translate }}
+        </a>
+        <a class="btn btn-dark ml-2 " (click)='loginService.logout()' [routerLink]="['/welcome']"
+          *ngIf='!isAuthorized'>
+          {{ 'signUp' | translate }}
+        </a>
       </div>
     </div>
   </div>
