@@ -1,0 +1,69 @@
+<div *ngIf="filteredCertififcate.length==0" class="alert alert-warning" role="alert">
+  There is no such certificates
+</div>
+<div style="display:inline-flex">
+  <select class="form-control " style="width:200px;margin-top:30px;margin-left: 0px;background-color: #FAFAD2">
+    <option>All certificates</option>
+    <option>My certificates</option>
+  </select>
+  <div class="row search-bar search">
+    <div class="input-group mb-3">
+      <select class="form-control" [(ngModel)]="sortType" style="background:#87CEFA; max-width:200px;color: white; border-radius: 2px 0 0 2px;text-align-last: center">
+        <option selected>Creation date</option>
+        <option>Price</option>
+        <option>Title</option>
+      </select>
+      <input type="text" class="form-control" [(ngModel)]='listFilter'>
+      <div class="input-group-append">
+        <span class="input-group-text text-cursor" (click)="clearField()" id="basic-addon1">&times;</span>
+      </div>
+      <div class="input-group-append">
+        <button class="btn btn-success" type="button" style="border-radius: 0 2px 2px 0;width: 100px" (click)='find()'>Find
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class=" central-block scrollbar scrollbar-primary">
+  <div class="flex-container row-reverse">
+    <div class="flex-item" *ngFor='let certificate of filteredCertififcate'>
+      <div class="card w-100  mb-3 flex-item" style="max-width: 23rem;">
+        <div class="card-header" style="display:inline-block">
+          <h4 style="float: left;">{{certificate.name}}</h4>
+          <small style="float: right;">{{certificate.dateOfCreation | date : 'MMM d, y'}}</small>
+        </div>
+        <div class="card-body " style="background:#87CEFA">
+          <div class="flex-container row-reverse" style="height:30px">
+            <div class="flex-item-button" *ngFor='let tag of certificate.tags'>
+              <button class="btn btn-success btn-sm">{{tag.name}}</button>
+            </div>
+          </div>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+            content.</p>
+        </div>
+        <div class="card-footer">
+          <button style="margin-left:-15px" *ngIf="isAdmin" type="button"
+            class="btn btn-danger btn-sm">Изменить</button>
+          <button style="margin-left:5px" *ngIf="isAdmin" type="button" class="btn btn-danger btn-sm">Удалить</button>
+          <div style="float: right">
+            <button style="margin-right: 5px" *ngIf="isAuthorized" type="button"
+              class="btn btn-danger btn-sm">Купить</button>
+            <small style="font-weight: 800;margin-top: 7px;">{{certificate.price}} BYN</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div  *ngIf="filteredCertififcate.length!=0" style="display:inline-flex;margin-right: 300px;margin-top: -20px;">
+  <select class="browser-default custom-select" style="width:180px;margin-top: 9px" [(ngModel)]="pageSize">
+    <option>5</option>
+    <option>25</option>
+    <option>50</option>
+    <option>100</option>
+  </select>
+  <ngb-pagination class="d-flex justify-content-center" [collectionSize]="collectionSize" [(pageSize)]="_pageSize"
+    [maxSize]="5" [(page)]="_page" size="lg" (pageChange)="onPageChanged($event)" style="margin-left: 50px;">
+  </ngb-pagination>
+</div>

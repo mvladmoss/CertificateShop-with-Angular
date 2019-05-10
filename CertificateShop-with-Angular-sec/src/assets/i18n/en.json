@@ -1,0 +1,19 @@
+{
+    "certificate": {
+        "shop" : "Certificate Shop",
+        "certificates" : "CERTIFICATES",
+        "my_certificates" : "MY CERTFICATES",
+        "description" : "The best certificate shop. Make your dreams real!"
+    },
+
+    "signIn" : "SIGN IN",
+    "signUp" : "SIGN UP",
+    "logout" : "LOG OUT" ,
+
+    "loginError": "Invalid login or password",
+    "unknowError": "Unknow error. Try later",
+    "invalidLogin": "Login length min 5 symbols",
+    "invalidPassword": "Password length min 5 symbols",
+    "advantages" : "Benefits for you!",
+    "welcome" : "Welcome,"
+}
