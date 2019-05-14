@@ -3,6 +3,7 @@ import { RestService } from '../rest/rest.service';
 import { ICertificate } from './certificate';
 import { IPageData } from './page-data';
 import { LoginService } from '../login/login.service';
+import { ITag } from './tag';
 
 @Component({
   selector: 'app-certificates',
@@ -18,6 +19,7 @@ export class CertificatesComponent implements OnInit {
   private _pageSize: number = 5;
   private _collectionSize: number;
   private _sortType: string = "dateOfCreation";
+  private myCertificates: boolean;
 
   constructor(private restService: RestService, private loginService: LoginService) { }
 
@@ -28,11 +30,31 @@ export class CertificatesComponent implements OnInit {
     this._listFilter = value;
   }
 
-  find() {
-    let params = this.performFilter();
+  filterFind(){
     this._page = 1;
     this._pageSize = 5;
+    this.find();
+  }
+
+  find(){
+    let params = this.performFilter();
+    this.myCertificates ? this.findUserCertificates(params) : this.findAllCertificates(params);
+  }
+
+  findAllCertificates(params : any) {
     this.restService.getCertificates(this._page.toString(), this.pageSize.toString(), this._sortType, params)
+      .then((resp: IPageData) => {
+        this._collectionSize = resp.pageCount * resp.limit;
+        this.filteredCertififcate = resp.pageData;
+        this.certificates = resp.pageData;
+      }).catch(error => {
+        this.filteredCertififcate = [];
+        this.certificates = [];
+      });
+  }
+
+  findUserCertificates(params : any) {
+    this.restService.getUserCertificates(this._page.toString(), this.pageSize.toString(), this._sortType, params)
       .then((resp: IPageData) => {
         this._collectionSize = resp.pageCount * resp.limit;
         this.filteredCertififcate = resp.pageData;
@@ -43,13 +65,15 @@ export class CertificatesComponent implements OnInit {
   performFilter() {
     let titleRegex = this._listFilter.match(/t\((.*?)\)/);
     let titleFilter: string = titleRegex === null ? "" : titleRegex[1];
-    let descriptionRegex = this._listFilter.match(/d\((.*?)\)/);
+    let descriptionRegex = this._listFilter.match(/d\((.*?)\)/g);
     let descriptionFilter: string = descriptionRegex === null ? "" : descriptionRegex[1];
+    let tagRegex = this._listFilter.match(/(?<=(#\()).*?(?=(\)))/g);
+    let tags = tagRegex ===null ? "" : tagRegex.concat();
     return {
       title: titleFilter,
-      description: descriptionFilter
+      description: descriptionFilter,
+      tagSet : tags
     }
-
   }
 
   get sortType() {
@@ -85,14 +109,8 @@ export class CertificatesComponent implements OnInit {
   }
 
   set pageSize(pageSize: string) {
-    let params = this.performFilter();
-    this.restService.getCertificates(this._page.toString(), pageSize, this._sortType, params)
-      .then((resp: IPageData) => {
-        this._collectionSize = resp.pageCount * resp.limit;
-        this._pageSize = resp.limit;
-        this.certificates = resp.pageData;
-        this.filteredCertififcate = resp.pageData;
-      })
+    this._pageSize = parseInt(pageSize);
+    this.find();
   }
 
   get pageSize() {
@@ -101,12 +119,8 @@ export class CertificatesComponent implements OnInit {
 
 
   onPageChanged(pagenumber: string) {
-    this.restService.getCertificates(pagenumber, this.pageSize.toString(), this._sortType)
-      .then((resp: IPageData) => {
-        this._collectionSize = resp.pageCount * resp.limit;
-        this.certificates = resp.pageData;
-        this.filteredCertififcate = resp.pageData;
-      })
+    this._page = parseInt(pagenumber);
+    this.find();
   }
 
   filteredCertififcate: ICertificate[] = [];
@@ -115,12 +129,7 @@ export class CertificatesComponent implements OnInit {
   ngOnInit(): void {
     this._page = 1;
     this._pageSize = 5;
-    this.restService.getCertificates(this._page.toString(), this.pageSize.toString(), this._sortType)
-      .then((resp: IPageData) => {
-        this._collectionSize = resp.pageCount * resp.limit;
-        this.filteredCertififcate = resp.pageData;
-        this.certificates = resp.pageData;
-      })
+    this.find();
   }
 
   get collectionSize() {
@@ -130,5 +139,24 @@ export class CertificatesComponent implements OnInit {
   set collectionSize(value: number) {
     this._collectionSize = value;
   }
+
+  changeCertificates() {
+    this._page = 1;
+    this._pageSize = 5;
+    let params = this.performFilter();
+    if (!this.myCertificates) {
+      this.findUserCertificates(params);
+      this.myCertificates = true;
+    } else {
+      this.findAllCertificates(params);
+      this.myCertificates = false;
+    }
+  }
+
+  searchByTag(tagName: string){
+    this.listFilter = "#(" + tagName + ")";
+    this.filterFind();
+  }
+
 
 }

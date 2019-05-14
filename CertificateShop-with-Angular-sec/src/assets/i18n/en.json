@@ -2,7 +2,7 @@
     "certificate": {
         "shop" : "Certificate Shop",
         "certificates" : "CERTIFICATES",
-        "my_certificates" : "MY CERTFICATES",
+        "create" : "CREATE NEW CERTIFICATE",
         "description" : "The best certificate shop. Make your dreams real!"
     },
 

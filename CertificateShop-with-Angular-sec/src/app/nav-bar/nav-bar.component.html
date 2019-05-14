@@ -15,9 +15,9 @@
           <a class="nav-link text-white" routerLinkActive="active" [routerLink]="['/certificates']">
             <i class="fa  fa-certificate fa-fw"></i>{{ 'certificate.certificates' | translate }}</a>
         </li>
-        <li class="nav-item" *ngIf='isAuthorized'>
-          <a class="nav-link text-white" href="">
-            <i class="fa  fa-gift fa-fw"></i>{{ 'certificate.my_certificates' | translate }}</a>
+        <li class="nav-item" *ngIf='isAuthorized && isAdmin'>
+          <a class="nav-link text-white" routerLinkActive="active" [routerLink]="['/certificates/buy']">
+            <i class="fa  fa-gift fa-fw"></i>{{ 'certificate.create' | translate }}</a>
         </li>
       </ul>
       <h4 *ngIf='userName' class="welcome-text">{{ 'welcome' | translate }} {{userName}}!</h4>

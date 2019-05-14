@@ -1,0 +1,18 @@
+.central-block{
+    margin-top: 2px;
+    background-color: #008B8B;
+    opacity: 0.95;
+    min-height: 680px;
+    height: auto;
+    border-radius: 15px;
+    width: 1700px;
+    margin-left: 100px;
+    overflow-y: auto;
+}
+
+.flex-cont {
+    display: flex;
+    width: 1000px;
+    height:auto;
+    flex-wrap:wrap;
+}

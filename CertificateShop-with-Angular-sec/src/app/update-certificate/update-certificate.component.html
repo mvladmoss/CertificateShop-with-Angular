@@ -1,0 +1,167 @@
+<div *ngIf="error" class="alert alert-warning" role="alert">
+  {{error}}
+</div>
+<div class="central-block" style="background-color:aliceblue; margin-top: 30px">
+  <form [formGroup]="addForm" (ngSubmit)="createCertificate()" class="text-center"
+    style="width: 700px;margin-left: 500px;margin-top: 30px">
+    <div>
+      <label style="float:left">Title</label>
+      <input type="text" formControlName='title' name='title' class="form-control" id='title'
+        placeholder="Your First name">
+      <div *ngIf="addForm.controls['title'].touched && !addForm.controls['title'].valid" style="color:red">
+        <span *ngIf="addForm.controls['title'].hasError('required') ">
+          Title required
+        </span>
+        <span *ngIf="addForm.controls['title'].hasError('minlength') ">
+          Min length is 5
+        </span>
+        <span *ngIf="addForm.controls['title'].hasError('maxlength') ">
+          max length is 15
+        </span>
+      </div>
+    </div>
+
+    <div>
+      <label for="exampleFormControlTextarea1" style="float:left">Description</label>
+      <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Your description"
+        formControlName="description"></textarea>
+      <div *ngIf="addForm.controls['description'].touched && !addForm.controls['description'].valid" style="color:red">
+        <span *ngIf="addForm.controls['description'].hasError('required') ">
+          Title required
+        </span>
+        <span *ngIf="addForm.controls['description'].hasError('minlength') ">
+          Min length is 10
+        </span>
+        <span *ngIf="addForm.controls['description'].hasError('maxlength') ">
+          max length is 250
+        </span>
+      </div>
+    </div>
+
+    <div>
+      <label for="exampleInputEmail1" style="float: left;">Price</label>
+      <input type="number" class="form-control" placeholder="Enter price" formControlName="price">
+      <div *ngIf="addForm.controls['price'].touched && !addForm.controls['price'].valid" style="color:red">
+        <span *ngIf="addForm.controls['price'].hasError('required') ">
+          Price is required
+        </span>
+        <span *ngIf="addForm.controls['price'].hasError('pattern') ">
+          Invalid
+        </span>
+      </div>
+    </div>
+
+    <div>
+      <label for="exampleInputEmail1" style="float: left;">Duration</label>
+      <input type="number" class="form-control" formControlName="duration" placeholder="Enter duration">
+      <div *ngIf="addForm.controls['duration'].touched && !addForm.controls['duration'].valid" style="color:red">
+        <span *ngIf="addForm.controls['duration'].hasError('required') ">
+          Duration is required
+        </span>
+        <span *ngIf="addForm.controls['duration'].hasError('max') ">
+          Max duration is 1000 days
+        </span>
+        <span *ngIf="addForm.controls['duration'].hasError('min') ">
+          Min duration is 1 day
+        </span>
+      </div>
+    </div>
+
+    <div style="display:flex;margin-top: 10px">
+      <button type="button" class="btn btn-primary" style="float:left" data-toggle="modal" data-target="#createTagModal"
+        data-whatever="@getbootstrap">Создать тег</button>
+
+      <button type="button" class="btn btn-primary" (click)="find()" data-toggle="modal" data-target="#exampleModal"
+        style="margin-left: 10px;" data-whatever="@getbootstrap">Добавить тег</button>
+
+    </div>
+    <div class="flex-cont" style="margin-top:10px;margin-left:-15px">
+      <div *ngFor='let tag of tagsToAdd' style="display:flex">
+        <h5
+          style="color:white;background-color:#28a745; border-radius: 5px;width:250px;height:25px;margin-top: 5px;margin-left: 15px">
+          {{tag.name}}
+        </h5>
+
+        <i class="fas fa-backspace" (click)="deleteTag(tag)"
+          style="font-size: 30px;margin-top: 3px;color: red;margin-left: 2px;"></i>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary" style="margin-top:10px;float: left">Create</button>
+  </form>
+  <!-- Default form contact -->
+
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Выберите тег</h5>
+        <button type="button" class="close" (click)="find()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <input type="text" class="form-control" [(ngModel)]="tagFilter" id="recipient-name"
+            placeholder="Введите имя тега">
+        </div>
+        <div *ngIf="tags.length!=0" class=" scrollbar scrollbar-primary">
+          <div class="flex-container row-reverse">
+            <div class="flex-item" *ngFor='let tag of tags'>
+              <button type="button" class="btn btn-success" (click)="addTag(tag)"
+                style="width:300px; margin-top: 10px">{{tag.name}}</button>
+            </div>
+          </div>
+        </div>
+        <h2 *ngIf="tags.length===0">There is no tags with such name</h2>
+      </div>
+      <ngb-pagination *ngIf="tags.length!=0" class="d-flex justify-content-center" [collectionSize]="_collectionSize"
+        [(pageSize)]="_pageSize" [maxSize]="5" [(page)]="_page" (pageChange)="onPageChanged($event)">
+      </ngb-pagination>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="createTagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Создайте свой тег</h5>
+        <button type="button" id='closeAddTagForm' class="close"  data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addFormTag" (ngSubmit)="createTag()" class="text-center" style="margin-top: 10px">
+          <div>
+            <label for="title" style="float:left">Tag name</label>
+            <input type="text" formControlName='tagName' name='title' class="form-control" id='title'
+              placeholder="Enter tag name">
+            <div *ngIf="addFormTag.controls['tagName'].touched && !addFormTag.controls['tagName'].valid"
+              style="color:red">
+              <span *ngIf="addFormTag.controls['tagName'].hasError('required') ">
+                Tag name is required
+              </span>
+              <span *ngIf="addFormTag.controls['tagName'].hasError('minlength') ">
+                Min length is 2
+              </span>
+              <span *ngIf="addFormTag.controls['tagName'].hasError('maxlength') ">
+                max length is 30
+              </span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Create</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

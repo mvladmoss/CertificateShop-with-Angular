@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
@@ -14,6 +14,10 @@ import { HttpClient} from "@angular/common/http";
 import { SignupComponent } from './signup/signup.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CertificatesComponent } from './certificates/certificates.component';
+import { UpdateCertificateComponent } from './update-certificate/update-certificate.component';
+//import { TagsInputModule } from 'ngx-tags-input/dist';
+import { NgBootstrapFormValidationModule } from 'ng-bootstrap-form-validation';
+
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -26,7 +30,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     WelcomePageComponent,
     LoginComponent,
     SignupComponent,
-    CertificatesComponent
+    CertificatesComponent,
+    UpdateCertificateComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +42,9 @@ export function HttpLoaderFactory(http: HttpClient) {
       { path: '', redirectTo: 'welcome', pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
       { path: 'signUp', component: SignupComponent },
-      { path: 'certificates', component: CertificatesComponent }
+      { path: 'certificates', component: CertificatesComponent },{
+        path: 'certificates/buy',component: UpdateCertificateComponent
+      }
     ]),
     NgbModule,
     TranslateModule.forRoot({
@@ -47,7 +54,10 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    NgBootstrapFormValidationModule.forRoot()
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

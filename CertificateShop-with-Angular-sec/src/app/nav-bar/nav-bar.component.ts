@@ -33,6 +33,10 @@ export class NavBarComponent {
     return this.loginService.userName;
   }
 
+  get isAdmin(){
+    return this.loginService.userRole === "ROLE_ADMIN";
+  }
+
   
   get isAuthorized(){
     this._isAuthorized = this.loginService.isUserAuthorized;
