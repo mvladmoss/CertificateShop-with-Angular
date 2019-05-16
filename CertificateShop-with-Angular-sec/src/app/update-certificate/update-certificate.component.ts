@@ -4,7 +4,7 @@ import { RestService } from '../rest/rest.service';
 import { IPageData } from '../certificates/page-data';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ICertificate } from '../certificates/certificate';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import * as $ from "jquery"
 
 @Component({
@@ -17,20 +17,21 @@ export class UpdateCertificateComponent implements OnInit {
   private tags: ITag[] = [];
   private tagsToAdd: ITag[] = [];
   private error: string;
+  private tagError: string;
   private _page: number = 1;
   private _pageSize: number = 5;
   private _collectionSize: number;
   private _tagFilter: string = "";
-  addForm: FormGroup;
-  addFormTag: FormGroup;
-  submitted = false;
+  private addForm: FormGroup;
+  private addFormTag: FormGroup;
+  private submitted = false;
+  private isUpdate: boolean;
+  private currentCertificateId: number;
 
-  constructor(private restService: RestService, private formBuilder: FormBuilder, private router: Router) {
-
+  constructor(private restService: RestService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-
     this.addForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.pattern('[a-zA-Z]+'), Validators.minLength(5), Validators.maxLength(15)]],
       description: ['', [Validators.minLength(10), Validators.maxLength(250), Validators.required]],
@@ -40,12 +41,27 @@ export class UpdateCertificateComponent implements OnInit {
     this.addFormTag = this.formBuilder.group({
       tagName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]]
     });
+
+    this.route.params.subscribe(params => {
+      let certificateId = +params['certificateId'];
+      if (certificateId) {
+        this.isUpdate = true;
+        this.currentCertificateId = certificateId;
+        this.restService.getCertificateById(certificateId).then(certificate => {
+          this.addForm.get('title').setValue(certificate.name);
+          this.addForm.get('description').setValue(certificate.description);
+          this.addForm.get('price').setValue(certificate.price);
+          this.addForm.get('duration').setValue(certificate.durationInDays);
+          this.tagsToAdd = certificate.tags;
+        });
+      }
+
+    })
     this._page = 1;
     this._pageSize = 5;
     this.find();
   }
 
-  get control() { return this.addForm.controls; }
 
   createCertificate() {
     this.submitted = true;
@@ -55,7 +71,7 @@ export class UpdateCertificateComponent implements OnInit {
     this.tagsToAdd.forEach(tag => delete tag.id);
     let tagSet = JSON.stringify(this.tagsToAdd);
     let certificate: ICertificate = {
-      id: null,
+      id: this.currentCertificateId,
       dateOfCreation: null,
       dateOfModification: null,
       name: this.addForm.get('title').value,
@@ -64,11 +80,12 @@ export class UpdateCertificateComponent implements OnInit {
       price: this.addForm.get('price').value,
       tags: this.tagsToAdd
     }
-
-    this.restService.createCertificate(certificate)
-      .then(() => {
-        this.router.navigate(['certificates']);
-      })
+    console.log(certificate);
+    
+    let promise: Promise<ICertificate> = this.isUpdate ? this.restService.updateCertificate(certificate) : this.restService.createCertificate(certificate);
+    promise.then(() => {
+      this.router.navigate(['certificates']);
+    })
       .catch(error => {
         alert("error");
         if (error.status === 400) {
@@ -113,7 +130,6 @@ export class UpdateCertificateComponent implements OnInit {
   }
 
   createTag() {
-    alert(3);
     if (this.addFormTag.invalid) {
       return;
     }
@@ -121,8 +137,17 @@ export class UpdateCertificateComponent implements OnInit {
       id: null,
       name: this.addFormTag.get('tagName').value
     }
-    this.restService.createTag(newTag);
-    $("#closeAddTagForm").click();
+    this.restService.createTag(newTag)
+      .then(() => {
+        $(
+          "#closeAddTagForm").click();
+        this.addFormTag.get('tagName').setValue("");
+        this.tagError = "";
+      })
+      .catch(error => {
+        this.tagError = error.error.errorMessage;
+        return;
+      });
   }
 
 }

@@ -117,12 +117,51 @@ export class RestService {
             }).toPromise();
     }
 
+    updateCertificate(certificate: ICertificate): Promise<ICertificate> {
+        let myheader = new HttpHeaders();
+        myheader = myheader.append('Accept-Language', this.languageService.currentLang)
+        myheader = myheader.append('Authorization', "Bearer " + sessionStorage.getItem('auth_token'));
+        return this.http
+            .put<ICertificate>(environment.url + "/certificates/" + certificate.id, certificate, {
+                headers: myheader
+            }).toPromise();
+    }
+
     createTag(tag: ITag) {
         let myheader = new HttpHeaders();
         myheader = myheader.append('Accept-Language', this.languageService.currentLang)
         myheader = myheader.append('Authorization', "Bearer " + sessionStorage.getItem('auth_token'));
         return this.http
             .post<ICertificate>(environment.url + "/tags", tag, {
+                headers: myheader
+            }).toPromise();
+    }
+
+    makePurchase(params) {
+        let myheader = new HttpHeaders();
+        myheader = myheader.append('Accept-Language', this.languageService.currentLang)
+        myheader = myheader.append('Authorization', "Bearer " + sessionStorage.getItem('auth_token'));
+        return this.http
+            .post<ICertificate>(environment.url + "/purchases", params, {
+                headers: myheader
+            }).toPromise();
+    }
+
+    getCertificateById(certificateId: number){
+        const myheader = new HttpHeaders();
+        myheader.set('Accept-Language', this.languageService.currentLang);
+        return this.http
+            .get<ICertificate>(environment.url + "/certificates/" + certificateId, {
+                headers: myheader
+            }).toPromise();
+    }
+
+    deleteCertificate(certificateId: number){
+        let myheader = new HttpHeaders();
+        myheader = myheader.append('Accept-Language', this.languageService.currentLang)
+        myheader = myheader.append('Authorization', "Bearer " + sessionStorage.getItem('auth_token'));
+        return this.http
+            .delete(environment.url + "/certificates/" + certificateId, {
                 headers: myheader
             }).toPromise();
     }

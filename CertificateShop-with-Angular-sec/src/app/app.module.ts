@@ -42,9 +42,9 @@ export function HttpLoaderFactory(http: HttpClient) {
       { path: '', redirectTo: 'welcome', pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
       { path: 'signUp', component: SignupComponent },
-      { path: 'certificates', component: CertificatesComponent },{
-        path: 'certificates/buy',component: UpdateCertificateComponent
-      }
+      { path: 'certificates', component: CertificatesComponent },
+      {path: 'certificates/update/:certificateId',component: UpdateCertificateComponent},
+      {path: 'certificates/buy',component: UpdateCertificateComponent}
     ]),
     NgbModule,
     TranslateModule.forRoot({

@@ -143,6 +143,9 @@
             <label for="title" style="float:left">Tag name</label>
             <input type="text" formControlName='tagName' name='title' class="form-control" id='title'
               placeholder="Enter tag name">
+              <div *ngIf="tagError" class="alert alert-warning" role="alert">
+                  {{tagError}}
+                </div>
             <div *ngIf="addFormTag.controls['tagName'].touched && !addFormTag.controls['tagName'].valid"
               style="color:red">
               <span *ngIf="addFormTag.controls['tagName'].hasError('required') ">
